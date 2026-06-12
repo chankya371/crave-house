@@ -1,0 +1,206 @@
+.address-wrapper {
+  width: 100%;
+  color: #fff;
+}
+
+.address-wrapper h2 {
+  font-size: 30px;
+  margin-bottom: 25px;
+  color: #ffb347;
+  font-weight: 700;
+}
+
+/* GRID */
+
+.address-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(320px, 1fr)
+  );
+  gap: 24px;
+}
+
+/* CARD */
+
+.address-card {
+  background: linear-gradient(
+    145deg,
+    rgba(20, 20, 20, 0.95),
+    rgba(45, 10, 0, 0.95)
+  );
+
+  border: 1px solid rgba(255, 120, 0, 0.15);
+
+  border-radius: 22px;
+
+  padding: 22px;
+
+  transition: 0.35s ease;
+
+  box-shadow:
+    0 0 15px rgba(255, 100, 0, 0.08);
+}
+
+.address-card:hover {
+  transform: translateY(-6px);
+
+  box-shadow:
+    0 0 30px rgba(255, 100, 0, 0.3);
+}
+
+/* TOP */
+
+.address-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+/* ICON */
+
+.address-icon {
+  min-width: 55px;
+  width: 55px;
+  height: 55px;
+
+  border-radius: 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: linear-gradient(
+    135deg,
+    #ff3b00,
+    #ff9500
+  );
+
+  color: white;
+
+  box-shadow:
+    0 0 15px rgba(255, 100, 0, 0.4);
+}
+
+/* CONTENT */
+
+.address-content {
+  flex: 1;
+}
+
+.address-content h3 {
+  margin-bottom: 10px;
+  font-size: 20px;
+  color: #fff;
+}
+
+.address-content p {
+  color: #d8d8d8;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.address-content span {
+  display: block;
+  color: #9e9e9e;
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+/* BUTTONS */
+
+.address-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.edit-btn-address,
+.delete-btn-address {
+  flex: 1;
+
+  border: none;
+
+  padding: 12px;
+
+  border-radius: 12px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+/* EDIT */
+
+.edit-btn-address {
+  background: linear-gradient(
+    135deg,
+    #ff3b00,
+    #ff9500
+  );
+
+  color: white;
+}
+
+.edit-btn-address:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 0 20px rgba(255, 100, 0, 0.45);
+}
+
+/* DELETE */
+
+.delete-btn-address {
+  background: rgba(255, 70, 70, 0.15);
+
+  color: #ff7b7b;
+
+  border: 1px solid rgba(255, 70, 70, 0.2);
+}
+
+.delete-btn-address:hover {
+  background: #ff3b00;
+  color: white;
+
+  box-shadow:
+    0 0 20px rgba(255, 70, 0, 0.35);
+}
+
+/* EMPTY */
+
+.empty-address {
+  height: 350px;
+
+  border-radius: 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 20px;
+
+  color: #cfcfcf;
+
+  background: rgba(255, 255, 255, 0.03);
+
+  border: 1px dashed rgba(255, 120, 0, 0.2);
+}
+
+/* MOBILE */
+
+@media (max-width: 768px) {
+  .address-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .address-top {
+    flex-direction: column;
+  }
+
+  .address-actions {
+    flex-direction: column;
+  }
+}

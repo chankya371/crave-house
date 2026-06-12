@@ -1,0 +1,502 @@
+/* =========================
+   FOOD PAGE
+========================= */
+
+.food-container {
+  width: 100%;
+  padding: 15px;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.food-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.food-top h2 {
+  color: #fff;
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.food-top p {
+  color: #aaa;
+  font-size: 14px;
+}
+
+.food-count {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #111;
+  border: 1px solid rgba(255, 120, 0, 0.2);
+  padding: 10px 16px;
+  border-radius: 12px;
+  color: #ff9800;
+  font-weight: 700;
+}
+
+/* =========================
+   ACTION BAR
+========================= */
+
+.food-actions-bar {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.food-search {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: #111;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 12px;
+  padding: 0 14px;
+}
+
+.food-search svg {
+  color: #ff9800;
+}
+
+.food-search input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  padding: 12px;
+  font-size: 14px;
+}
+
+.food-add-btn {
+  border: none;
+  padding: 12px 22px;
+  border-radius: 12px;
+  cursor: pointer;
+  color: white;
+  font-weight: 700;
+  background: linear-gradient(
+    135deg,
+    #ff6b00,
+    #ff9800
+  );
+  transition: .3s;
+}
+
+.food-add-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* =========================
+   TABLE
+========================= */
+
+.food-table-wrapper {
+  background: #0d0d0d;
+  border-radius: 20px;
+  overflow-x: auto;
+  border: 1px solid rgba(255,120,0,.15);
+}
+
+.food-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1100px;
+}
+
+.food-table thead {
+  background: rgba(255,120,0,.05);
+}
+
+.food-table th {
+  padding: 14px;
+  text-align: left;
+  color: #ff9800;
+  font-size: 13px;
+  font-weight: 700;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.food-table td {
+  padding: 14px;
+  color: white;
+  font-size: 13px;
+  border-bottom: 1px solid rgba(255,255,255,.05);
+  vertical-align: middle;
+}
+
+.food-table tbody tr:hover {
+  background: rgba(255,120,0,.05);
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.food-name {
+  font-weight: 700;
+}
+
+.food-price {
+  color: #4ade80;
+  font-weight: 700;
+}
+
+.food-description {
+  max-width: 250px;
+  color: #ccc;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.food-image {
+  width: 70px;
+  height: 70px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 2px solid rgba(255,120,0,.2);
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.food-btns {
+  display: flex;
+  gap: 8px;
+}
+
+.food-btn {
+  border: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+  transition: .3s;
+}
+
+.edit-btn {
+  background: linear-gradient(
+    135deg,
+    #ff9800,
+    #ff6b00
+  );
+}
+
+.delete-btn {
+  background: linear-gradient(
+    135deg,
+    #ef4444,
+    #dc2626
+  );
+}
+
+.food-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* =========================
+   EMPTY
+========================= */
+
+.food-empty {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+}
+
+/* =========================
+   PAGINATION
+========================= */
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.pagination button {
+  border: none;
+  min-width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  cursor: pointer;
+  background: #111;
+  color: white;
+  transition: .3s;
+}
+
+.pagination button:hover {
+  background: #ff7a00;
+}
+
+.active-page {
+  background: #ff7a00 !important;
+}
+
+/* =========================
+   SCROLLBAR
+========================= */
+
+.food-table-wrapper::-webkit-scrollbar {
+  height: 6px;
+}
+
+.food-table-wrapper::-webkit-scrollbar-thumb {
+  background: #ff7a00;
+  border-radius: 20px;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px) {
+  .food-top,
+  .food-actions-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .food-add-btn {
+    width: 100%;
+  }
+
+  .food-table {
+    min-width: 900px;
+  }
+}
+
+/* =========================
+   ADD FOOD PAGE
+========================= */
+
+.food-page {
+  width: 100%;
+  padding: 20px;
+}
+
+.food-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.food-page-header h2 {
+  color: #fff;
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 5px;
+}
+
+.food-page-header p {
+  color: #aaa;
+  font-size: 14px;
+}
+
+.food-back-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  background: #1a1a1a;
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: .3s;
+}
+
+.food-back-btn:hover {
+  background: #2a2a2a;
+}
+
+/* =========================
+   FORM CARD
+========================= */
+
+.food-form-card {
+  background: #0d0d0d;
+  border-radius: 20px;
+  padding: 25px;
+  border: 1px solid rgba(255,120,0,.15);
+  box-shadow: 0 0 25px rgba(255,120,0,.08);
+}
+
+.food-form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+/* =========================
+   FORM GROUP
+========================= */
+
+.food-form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.food-form-group label {
+  color: #ff9800;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.food-form-group input,
+.food-form-group select,
+.food-form-group textarea {
+  background: #161616;
+  border: 1px solid rgba(255,255,255,.08);
+  color: white;
+  padding: 14px;
+  border-radius: 12px;
+  outline: none;
+  font-size: 14px;
+  transition: .3s;
+}
+
+.food-form-group input:focus,
+.food-form-group select:focus,
+.food-form-group textarea:focus {
+  border-color: #ff9800;
+  box-shadow: 0 0 10px rgba(255,152,0,.2);
+}
+
+.food-form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* =========================
+   FULL WIDTH
+========================= */
+
+.full-width {
+  grid-column: span 2;
+}
+
+/* =========================
+   IMAGE UPLOAD
+========================= */
+
+.food-upload-box {
+  height: 160px;
+  border: 2px dashed rgba(255,152,0,.4);
+  border-radius: 16px;
+  background: #141414;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: .3s;
+}
+
+.food-upload-box:hover {
+  border-color: #ff9800;
+  background: #181818;
+}
+
+.food-upload-box svg {
+  font-size: 42px;
+  color: #ff9800;
+}
+
+.food-upload-box span {
+  color: #bbb;
+  font-size: 14px;
+}
+
+/* =========================
+   IMAGE PREVIEW
+========================= */
+
+.food-preview-grid {
+  grid-column: span 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.food-preview-img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 14px;
+  border: 2px solid rgba(255,152,0,.2);
+}
+
+/* =========================
+   SUBMIT BUTTON
+========================= */
+
+.food-submit-btn {
+  grid-column: span 2;
+  border: none;
+  padding: 14px;
+  border-radius: 14px;
+  background: linear-gradient(
+    135deg,
+    #ff6b00,
+    #ff9800
+  );
+  color: white;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: .3s;
+}
+
+.food-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 18px rgba(255,152,0,.35);
+}
+
+.food-submit-btn:disabled {
+  opacity: .7;
+  cursor: not-allowed;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px) {
+  .food-page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .food-form {
+    grid-template-columns: 1fr;
+  }
+
+  .full-width,
+  .food-submit-btn,
+  .food-preview-grid {
+    grid-column: span 1;
+  }
+
+  .food-preview-img {
+    width: 100px;
+    height: 100px;
+  }
+}
