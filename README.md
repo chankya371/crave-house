@@ -1,91 +1,84 @@
 # 🍔 Crave House
 
-Crave House is a full-stack food ordering and delivery platform built using React.js, Node.js, Express.js, MongoDB, Stripe, and OpenStreetMap.
+A modern **Full Stack Food Ordering & Delivery Platform** built using **React.js, Node.js, Express.js, MongoDB, Docker, Stripe, and OpenStreetMap**.
 
-The platform allows customers to browse restaurants, order food online, make secure payments, manage profiles, and track delivery locations. It also includes a dedicated Admin Panel for managing users, restaurants, orders, and products.
-
----
-
-# 📌 Problem Statement
-
-Traditional food ordering systems often lack centralized management, secure payment integration, and accurate delivery location handling.
-
-Crave House solves this problem by providing:
-
-* Online food ordering
-* Secure online payments
-* User authentication
-* Restaurant and product management
-* Location-based delivery support
-* Admin dashboard for complete control
+Crave House enables customers to browse food items, place orders, make secure online payments, manage their profiles, and select delivery locations using interactive maps. The platform also provides a powerful **Admin Dashboard** to manage users, categories, products, and orders efficiently.
 
 ---
 
-# 🚀 Key Features
+# 🌟 Features
 
-## Customer Features
+## 👤 Customer Features
 
-### User Authentication
+### Authentication
 
 * User Registration
+* OTP Email Verification
 * Login & Logout
 * JWT Authentication
 * Protected Routes
 
 ### Food Ordering
 
-* Browse food items
-* Search products
-* Add to cart
-* Remove from cart
-* Update quantity
+* Browse Categories
+* Search Food Items
+* View Food Details
+* Add to Cart
+* Update Quantity
+* Remove from Cart
+* Wishlist (Favorites)
 
 ### User Profile
 
-* Update profile information
-* Manage delivery addresses
-* View order history
+* Update Profile
+* Manage Delivery Addresses
+* View Order History
+* Track Order Status
 
-### Location Selection
+### Location Services
 
-* Select current location
-* Pick location from map
-* Reverse geocoding using OpenStreetMap
+* Detect Current Location
+* Select Delivery Location from Map
+* Reverse Geocoding using OpenStreetMap
+* Interactive Map using React Leaflet
 
-### Payment System
+### Secure Payments
 
 * Stripe Payment Gateway
-* Secure payment processing
-* Payment Intent implementation
+* Payment Intent API
+* Online Payment
+* Cash on Delivery (Optional)
 
 ---
 
-## Admin Features
+## 🛠 Admin Dashboard
 
 ### Dashboard
 
 * Total Users
 * Total Orders
-* Total Revenue
-* Analytics Overview
-
-### Product Management
-
-* Add Products
-* Edit Products
-* Delete Products
+* Total Categories
+* Total Products
+* Order Analytics
 
 ### Category Management
 
-* Create Categories
-* Update Categories
-* Delete Categories
+* Add Category
+* Update Category
+* Delete Category
+
+### Product Management
+
+* Add Food Items
+* Upload Multiple Images
+* Edit Products
+* Delete Products
 
 ### Order Management
 
-* View Orders
+* View Customer Orders
 * Update Order Status
-* Track Delivery Progress
+* Manage Delivery Progress
 
 ### User Management
 
@@ -94,16 +87,17 @@ Crave House solves this problem by providing:
 
 ---
 
-# 🛠 Tech Stack
+# 🚀 Tech Stack
 
 ## Frontend
 
 * React.js
-* React Router
+* React Router DOM
 * Axios
 * React Toastify
+* React Icons
 * React Leaflet
-* CSS
+* CSS3
 
 ## Backend
 
@@ -112,87 +106,121 @@ Crave House solves this problem by providing:
 * JWT Authentication
 * Multer
 * Nodemailer
+* Bcrypt.js
 
 ## Database
 
 * MongoDB
 * Mongoose
 
-## Payment Gateway
+## Payment
 
-* Stripe
+* Stripe Payment Gateway
 
-## Maps & Location
+## Maps
 
 * OpenStreetMap
 * Nominatim API
 * React Leaflet
 
+## DevOps
+
+* Docker
+* Docker Compose
+* Environment Variables (.env)
+
 ---
 
 # 📂 Project Structure
 
+```
 crave-house/
-
-├── admin-frontend/
-
-├── food-frontend/
-
+│
 ├── backend/
-
+│
+├── food-frontend/
+│
+├── admin-frontend/
+│
+├── docker-compose.yml
+│
 ├── .gitignore
-
+│
 └── README.md
+```
 
 ---
 
 # ⚙️ Installation
 
-## Clone Repository
+## 1️⃣ Clone Repository
 
+```bash
 git clone https://github.com/chankya371/crave-house.git
 
 cd crave-house
+```
 
 ---
 
-## Backend Setup
+## 2️⃣ Backend Setup
 
+```bash
 cd backend
 
 npm install
 
 npm run dev
+```
 
 ---
 
-## Food Frontend Setup
+## 3️⃣ Customer Frontend
 
+```bash
 cd food-frontend
 
 npm install
 
-npm run dev
+npm start
+```
 
 ---
 
-## Admin Frontend Setup
+## 4️⃣ Admin Frontend
 
+```bash
 cd admin-frontend
 
 npm install
 
-npm run dev
+npm start
+```
+
+---
+
+# 🐳 Docker Setup
+
+Start all services using Docker Compose.
+
+```bash
+docker-compose up --build
+```
+
+To stop containers:
+
+```bash
+docker-compose down
+```
 
 ---
 
 # 🔐 Environment Variables
 
-Create a .env file inside backend folder.
+Create a **.env** file inside the **backend** directory.
 
-Required variables:
-
-PORT=
+```env
+PORT=5000
 
 MONGO_URI=
 
@@ -204,36 +232,102 @@ EMAIL_USER=
 
 EMAIL_PASSWORD=
 
+CLIENT_URL=http://localhost:3000
+```
+
+For Frontend:
+
+```env
+REACT_APP_API_URL=http://localhost:5000/api
+```
+
 ---
 
-# 🔄 Application Flow
+# 📷 Image Upload
 
-1. User registers/login.
-2. User browses food items.
-3. User adds products to cart.
-4. User selects delivery location.
-5. User completes payment using Stripe.
-6. Order is stored in MongoDB.
-7. Admin manages order from dashboard.
-8. User receives order updates.
+* Product Image Upload
+* Category Image Upload
+* Multer Storage
+* Static Image Serving
+
+---
+
+# 🔄 Application Workflow
+
+1. User creates an account.
+2. Email OTP verification.
+3. User logs in securely.
+4. Browse categories and food items.
+5. Add products to cart.
+6. Select delivery address.
+7. Choose delivery location on map.
+8. Complete payment using Stripe.
+9. Order stored in MongoDB.
+10. Admin updates order status.
+11. Customer tracks order history.
+
+---
+
+# 🔒 Security Features
+
+* JWT Authentication
+* Password Hashing (bcrypt)
+* Protected Routes
+* Admin Authorization
+* Secure Stripe Payment
+* Environment Variables
+* Input Validation
 
 ---
 
 # 📈 Future Improvements
 
-* Real-time order tracking
-* Nearby users within radius
-* Push notifications
-* Google Maps integration
-* AI-based food recommendations
-* Restaurant partner portal
+* Google Maps Integration
+* Real-Time Order Tracking
+* Live Delivery Tracking
+* Push Notifications
+* AI Food Recommendation
+* Restaurant Partner Portal
+* Coupons & Discounts
+* Ratings & Reviews
+* PWA Support
+* Multi-Restaurant Support
+
+---
+
+# 💻 Tech Highlights
+
+* Full Stack MERN Application
+* RESTful APIs
+* Dockerized Backend & Frontend
+* Responsive UI
+* Role-Based Authentication
+* Secure Payment Integration
+* Location-Based Delivery
+* Image Upload with Multer
+* MongoDB Relationships using Mongoose
+* Clean Project Structure
 
 ---
 
 # 👨‍💻 Developer
 
-Vijay Sharma
+**Vijay Sharma**
 
-Full Stack Developer
+**Full Stack MERN Developer**
 
-Tech Stack: React.js, Node.js, Express.js, MongoDB
+### Skills
+
+* React.js
+* Node.js
+* Express.js
+* MongoDB
+* Docker
+* JavaScript
+* REST APIs
+* Stripe Integration
+* JWT Authentication
+
+---
+
+## ⭐ If you like this project, don't forget to Star the repository!
