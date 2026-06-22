@@ -36,3 +36,5 @@ mongoose
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+console.log("🔥 Live Reload Test 2");

@@ -1,0 +1,72 @@
+services:
+  backend:
+    build: ./backend
+    container_name: crave-house-backend
+
+    ports:
+      - "5000:5000"
+
+    env_file:
+      - ./backend/.env
+
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+
+    depends_on:
+      - mongo
+
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
+  mongo:
+    image: mongo:7
+    container_name: crave-house-mongo
+
+    ports:
+      - "27017:27017"
+
+    volumes:
+      - mongo-data:/data/db
+
+  food-frontend:
+    build: ./food-frontend
+    container_name: crave-house-food-frontend
+
+    ports:
+      - "3000:3000"
+
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+      - BROWSER=none
+
+    depends_on:
+      - backend
+
+    volumes:
+      - ./food-frontend:/app
+      - /app/node_modules
+
+  admin-frontend:
+    build: ./admin-frontend
+    container_name: crave-house-admin-frontend
+
+    ports:
+      - "3001:3000"
+
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+      - BROWSER=none
+
+    depends_on:
+      - backend
+
+    volumes:
+      - ./admin-frontend:/app
+      - /app/node_modules
+
+volumes:
+  mongo-data:

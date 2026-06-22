@@ -25,23 +25,23 @@ function UsersList() {
 
   const fetchUsers = async () => {
     try {
-      const token = localStorage.getItem("token");
+      setLoading(true);
 
-      if (!token) {
-        setLoading(false);
-        return;
-      }
+      console.log("Token:", localStorage.getItem("token"));
 
-      const res = await API.get("/users", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      // Axios interceptor automatically sends the token
+      const res = await API.get("/users");
+
+      console.log("Users Response:", res.data);
 
       setUsers(res.data || []);
       setFilteredUsers(res.data || []);
     } catch (err) {
-      console.log("Users fetch error:", err.response?.data || err.message);
+      console.error("Users fetch error:", err.response?.data || err.message);
+
+      if (err.response?.status === 401) {
+        console.error("Unauthorized - Invalid or expired token");
+      }
     } finally {
       setLoading(false);
     }
@@ -59,17 +59,13 @@ function UsersList() {
 
   return (
     <div className="users-container">
-      {/* Header */}
-      
-        
-
-        <div className="users-top-bar">
-  <div className="users-count">
-    <FaUsers />
-    <span>{users.length} Users</span>
-  </div>
-</div>
-      
+      {/* Top Bar */}
+      <div className="users-top-bar">
+        <div className="users-count">
+          <FaUsers />
+          <span>{users.length} Users</span>
+        </div>
+      </div>
 
       {/* Search */}
       <div className="search-box">
@@ -103,7 +99,7 @@ function UsersList() {
                   <td>
                     <div className="user-info">
                       <div className="user-avatar">
-                        {user.firstName?.charAt(0)}
+                        {user.firstName?.charAt(0).toUpperCase()}
                       </div>
 
                       <div>

@@ -61,45 +61,64 @@ function AdminDashboard() {
   }, []);
 
   const fetchDashboardData = async () => {
-    try {
-      setLoading(true);
+  setLoading(true);
 
-      const [foodRes, categoryRes, orderRes] = await Promise.all([
-        API.get("/food"),
-        API.get("/category"),
-        API.get("/orders"),
-      ]);
+  try {
+    const [foodRes, categoryRes, orderRes] = await Promise.allSettled([
+      API.get("/food"),
+      API.get("/category"),
+      API.get("/orders"),
+    ]);
 
-      setFood(foodRes.data?.data || []);
-      setCategories(categoryRes.data || []);
-      setOrders(orderRes.data || []);
-    } catch (err) {
-      console.log("Dashboard fetch error:", err);
+    // Food
+    if (foodRes.status === "fulfilled") {
+      setFood(foodRes.value.data?.data || []);
+    } else {
+      console.error("Food fetch failed:", foodRes.reason);
       setFood([]);
-      setCategories([]);
-      setOrders([]);
-    } finally {
-      setLoading(false);
     }
-  };
+
+    // Categories
+    if (categoryRes.status === "fulfilled") {
+      setCategories(categoryRes.value.data || []);
+    } else {
+      console.error("Category fetch failed:", categoryRes.reason);
+      setCategories([]);
+    }
+
+    // Orders
+    if (orderRes.status === "fulfilled") {
+      setOrders(orderRes.value.data || []);
+    } else {
+      console.error("Orders fetch failed:", orderRes.reason);
+      setOrders([]);
+    }
+  } catch (err) {
+    console.error("Dashboard Error:", err);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const fetchFood = async () => {
-    try {
-      const res = await API.get("/food");
-      setFood(res.data?.data || []);
-    } catch {
-      setFood([]);
-    }
-  };
+  try {
+    const res = await API.get("/food");
+    setFood(res.data?.data || []);
+  } catch (err) {
+    console.log(err);
+    setFood([]);
+  }
+};
 
-  const fetchCategories = async () => {
-    try {
-      const res = await API.get("/category");
-      setCategories(res.data || []);
-    } catch {
-      setCategories([]);
-    }
-  };
+ const fetchCategories = async () => {
+  try {
+    const res = await API.get("/category");
+    setCategories(res.data || []);
+  } catch (err) {
+    console.log(err);
+    setCategories([]);
+  }
+};
 
   const successOrders = orders.filter(
     (order) =>

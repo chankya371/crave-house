@@ -1,4 +1,4 @@
-import Food from "../models/food.js";
+import Food from "../models/Food.js";
 
 // ================= ADD FOOD =================
 export const addFood = async (req, res) => {
