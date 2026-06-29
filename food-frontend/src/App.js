@@ -2,6 +2,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import { useEffect } from "react";
+import socket from "./socket/socket";
+
 import Home from "./pages/Home";
 import Signup from "./pages/signup";
 import Login from "./pages/login";
@@ -20,9 +23,24 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Payment from "./pages/Payment";
 
-function App() {
 
-  
+
+function App() {
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log("✅ Connected:", socket.id);
+    });
+
+    socket.on("disconnect", () => {
+      console.log("❌ Disconnected");
+    });
+
+    return () => {
+      socket.off("connect");
+      socket.off("disconnect");
+    };
+  }, []);
+
   return (
     <BrowserRouter>
       <ToastContainer

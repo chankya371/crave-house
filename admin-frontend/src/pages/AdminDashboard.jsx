@@ -22,6 +22,7 @@ import AddFood from "../components/AddFood";
 import EditFood from "../components/EditFood";
 import Orders from "../components/Orders";
 import OrderStatus from "../components/OrderStatus";
+import Profile from "../pages/Profile";
 
 function AdminDashboard() {
   const navigate = useNavigate();
@@ -139,7 +140,10 @@ function AdminDashboard() {
       <Sidebar page={page} setPage={setPage} />
 
       <div className="content">
-        <Topbar page={page} />
+        <Topbar
+  page={page}
+  setPage={setPage}
+/>
 
         {/* DASHBOARD */}
         {page === "dashboard" && (
@@ -372,6 +376,9 @@ function AdminDashboard() {
         {/* ORDERS */}
         {page === "orders" && <Orders />}
         {page === "orderStatus" && <OrderStatus />}
+
+        {/* PROFILE */}
+        {page === "profile" && <Profile />}
       </div>
     </div>
   );

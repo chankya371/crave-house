@@ -27,7 +27,7 @@ export const addCategory = async (req, res) => {
 export const getCategories = async (req, res) => {
   try {
     const categories = await Category.find();
-    console.log("DB DATA:", categories); // 👈 DEBUG
+   
     res.json(categories);
   } catch (error) {
     res.status(500).json({ message: "Error fetching categories" });

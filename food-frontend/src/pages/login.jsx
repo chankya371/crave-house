@@ -7,6 +7,8 @@ import logoImage from "../assets/logo.png";
 import foodImage from "../assets/login.png";
 import "../styles/auth.css";
 
+import socket from "../socket/socket";
+
 function Login() {
   const [form, setForm] = useState({
     email: "",
@@ -31,6 +33,9 @@ function Login() {
       localStorage.setItem("token", res.data.token);
 
       const user = jwtDecode(res.data.token);
+
+      // Join Socket.IO room
+socket.emit("join_user", user.id);
 
       toast.success("Login successful");
 

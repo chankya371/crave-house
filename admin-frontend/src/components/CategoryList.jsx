@@ -112,25 +112,25 @@ function CategoryList({
                   </td>
 
                   <td>
-                    <div className="category-btns">
-                      <button
-                        className="category-btn edit-btn"
-                        onClick={() => {
-                          setSelectedCategory(cat);
-                          setPage("editCategory");
-                        }}
-                      >
-                        <FaEdit />
-                      </button>
+  <div className="category-btns">
+    <button
+      className="category-btn edit-btn"
+      onClick={() => {
+        setSelectedCategory(cat);
+        setPage("editCategory");
+      }}
+    >
+      <FaEdit />
+    </button>
 
-                      <button
-                        className="category-btn delete-btn"
-                        onClick={() => handleDelete(cat._id)}
-                      >
-                        <MdDelete />
-                      </button>
-                    </div>
-                  </td>
+    <button
+      className="category-btn delete-btn"
+      onClick={() => handleDelete(cat._id)}
+    >
+      <MdDelete />
+    </button>
+  </div>
+</td>
                 </tr>
               ))
             )}

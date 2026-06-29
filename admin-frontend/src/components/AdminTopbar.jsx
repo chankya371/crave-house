@@ -1,9 +1,33 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
+import API from "../api/api";
+
 import { IoIosNotificationsOutline } from "react-icons/io";
-import { CgProfile } from "react-icons/cg";
+import {
+  CgProfile,
+  CgLogOut,
+  CgPassword,
+} from "react-icons/cg";
+
+import {
+  FaUserCircle,
+  FaStore,
+  FaCog,
+  FaHistory,
+} from "react-icons/fa";
+
 import "../styles/Topbar.css";
 
-function Topbar({ page }) {
+function Topbar({ page, setPage }) {
+  const [showProfile, setShowProfile] = useState(false);
+
+  const [admin, setAdmin] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+  });
+
+  const profileRef = useRef(null);
+
   const pageData = {
     dashboard: {
       title: "Dashboard",
@@ -29,10 +53,72 @@ function Topbar({ page }) {
       title: "Order Status",
       subtitle: "Monitor deliveries",
     },
+    profile: {
+      title: "My Profile",
+      subtitle: "Manage your account",
+    },
+    restaurant: {
+      title: "Restaurant",
+      subtitle: "Restaurant information",
+    },
+    settings: {
+      title: "Settings",
+      subtitle: "Application settings",
+    },
+    activity: {
+      title: "Activity Log",
+      subtitle: "Recent admin activities",
+    },
+    changePassword: {
+      title: "Change Password",
+      subtitle: "Update your password",
+    },
   };
 
-  const currentPage =
-    pageData[page] || pageData.dashboard;
+  const currentPage = pageData[page] || pageData.dashboard;
+
+  useEffect(() => {
+    const fetchAdmin = async () => {
+      try {
+        const res = await API.get("/auth/me");
+
+        setAdmin(res.data.user);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchAdmin();
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (
+        profileRef.current &&
+        !profileRef.current.contains(e.target)
+      ) {
+        setShowProfile(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () =>
+      document.removeEventListener(
+        "mousedown",
+        handleClickOutside
+      );
+  }, []);
+
+  const openPage = (pageName) => {
+    setPage(pageName);
+    setShowProfile(false);
+  };
+
+  const logout = () => {
+    localStorage.clear();
+    window.location.href = "/admin-login";
+  };
 
   return (
     <div className="topbar">
@@ -42,17 +128,102 @@ function Topbar({ page }) {
       </div>
 
       <div className="topbar-right">
+
         <button className="notification-btn">
           <IoIosNotificationsOutline />
           <span className="badge">3</span>
         </button>
 
-        <div className="admin-profile">
-          <CgProfile />
-          <div>
-            <h4>Admin</h4>
-            <p>Crave House</p>
+        <div
+          className="profile-wrapper"
+          ref={profileRef}
+        >
+          <div
+            className="admin-profile"
+            onClick={() =>
+              setShowProfile(!showProfile)
+            }
+          >
+            <CgProfile />
+
+            <div>
+              <h4>
+                {admin.firstName} {admin.lastName}
+              </h4>
+
+              <p>{admin.email}</p>
+            </div>
           </div>
+
+          {showProfile && (
+            <div className="profile-dropdown">
+
+              <div className="profile-header">
+                <CgProfile className="profile-icon" />
+
+                <div>
+                  <h4>
+                    {admin.firstName} {admin.lastName}
+                  </h4>
+
+                  <p>{admin.email}</p>
+                </div>
+              </div>
+
+              <div className="dropdown-divider"></div>
+
+              <button
+                className="dropdown-item"
+                onClick={() => openPage("profile")}
+              >
+                <FaUserCircle />
+                My Profile
+              </button>
+
+              <button
+                className="dropdown-item"
+                onClick={() => openPage("restaurant")}
+              >
+                <FaStore />
+                Restaurant Info
+              </button>
+
+              <button
+                className="dropdown-item"
+                onClick={() => openPage("settings")}
+              >
+                <FaCog />
+                Settings
+              </button>
+
+              <button
+                className="dropdown-item"
+                onClick={() => openPage("activity")}
+              >
+                <FaHistory />
+                Activity Log
+              </button>
+
+              <button
+                className="dropdown-item"
+                onClick={() => openPage("changePassword")}
+              >
+                <CgPassword />
+                Change Password
+              </button>
+
+              <div className="dropdown-divider"></div>
+
+              <button
+                className="dropdown-item logout"
+                onClick={logout}
+              >
+                <CgLogOut />
+                Logout
+              </button>
+
+            </div>
+          )}
         </div>
       </div>
     </div>

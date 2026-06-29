@@ -11,13 +11,16 @@ import {createOrder, getOrders, updateOrderStatus, getMyOrders } from "../contro
 
 const router = express.Router();
 
+
 router.post("/signup", signup);
-router.post("/verify-otp", verifyOTP);
-router.post("/resend-otp", resendOTP);
+
+
 router.post("/login", userLogin);
+
 router.post("/admin/login", adminLogin);
 
 router.get("/users", authMiddleware, getAllUsers);
+
 router.get("/users/:id", authMiddleware, getAllUsers);
 
 
