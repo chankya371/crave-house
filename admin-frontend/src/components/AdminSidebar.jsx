@@ -7,6 +7,7 @@ import {
   FaUtensils,
   FaShoppingBag,
   FaTruck,
+  FaComments,
   FaSignOutAlt,
 } from "react-icons/fa";
 
@@ -81,6 +82,20 @@ function AdminSidebar({ page, setPage }) {
           <FaTruck />
           Order Status
         </li>
+
+        <li
+  className={
+    page === "customerSupport"
+      ? "active"
+      : ""
+  }
+  onClick={() =>
+    setPage("customerSupport")
+  }
+>
+  <FaComments />
+  Customer Support
+</li>
       </ul>
 
       <div className="logout-btn" onClick={handleLogout}>

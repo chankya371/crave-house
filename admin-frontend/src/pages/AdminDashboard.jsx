@@ -23,6 +23,7 @@ import EditFood from "../components/EditFood";
 import Orders from "../components/Orders";
 import OrderStatus from "../components/OrderStatus";
 import Profile from "../pages/Profile";
+import ChatPage from "../pages/ChatPage";
 
 function AdminDashboard() {
   const navigate = useNavigate();
@@ -376,6 +377,10 @@ function AdminDashboard() {
         {/* ORDERS */}
         {page === "orders" && <Orders />}
         {page === "orderStatus" && <OrderStatus />}
+
+       { /* CUSTOMER SUPPORT */}
+{page === "customerSupport" && <ChatPage />}
+
 
         {/* PROFILE */}
         {page === "profile" && <Profile />}

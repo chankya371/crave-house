@@ -6,6 +6,7 @@ const messageSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Chat",
       required: true,
+      index: true,
     },
 
     sender: {
@@ -26,12 +27,30 @@ const messageSchema = new mongoose.Schema(
       trim: true,
     },
 
+    messageType: {
+      type: String,
+      enum: ["text", "image", "file"],
+      default: "text",
+    },
+
+    attachment: {
+      type: String,
+      default: "",
+    },
+
     read: {
       type: Boolean,
       default: false,
     },
+
+    delivered: {
+      type: Boolean,
+      default: true,
+    },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
 export default mongoose.model("Message", messageSchema);

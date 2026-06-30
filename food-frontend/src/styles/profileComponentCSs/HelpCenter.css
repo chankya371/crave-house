@@ -1,0 +1,41 @@
+.help-center{
+    width:100%;
+}
+
+.help-card{
+    margin-top:20px;
+    background:#1b1b1b;
+    border:1px solid rgba(255,122,0,.25);
+    border-radius:18px;
+    padding:35px;
+}
+
+.help-card h3{
+    color:#fff;
+    font-size:26px;
+    margin-bottom:15px;
+}
+
+.help-card p{
+    color:#cfcfcf;
+    line-height:1.8;
+    margin-bottom:25px;
+    font-size:16px;
+}
+
+.chat-btn{
+    background:#ff7a00;
+    color:#fff;
+    border:none;
+    padding:14px 30px;
+    border-radius:10px;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.chat-btn:hover{
+    background:#ff8f00;
+    transform:translateY(-2px);
+}

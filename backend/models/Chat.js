@@ -18,8 +18,26 @@ const chatSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+
+    lastMessageTime: {
+      type: Date,
+      default: Date.now,
+    },
+
+    unreadCount: {
+      type: Number,
+      default: 0,
+    },
+
+    status: {
+      type: String,
+      enum: ["open", "closed"],
+      default: "open",
+    },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
 export default mongoose.model("Chat", chatSchema);

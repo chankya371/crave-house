@@ -36,3 +36,24 @@ export const getMessages = async (req, res) => {
     });
   }
 };
+
+export const getAllChats = async (req, res) => {
+  try {
+
+    const chats = await Chat.find()
+      .populate(
+        "customer",
+        "firstName lastName email"
+      )
+      .sort({ updatedAt: -1 });
+
+    res.json(chats);
+
+  } catch (err) {
+
+    res.status(500).json({
+      message: err.message,
+    });
+
+  }
+};
