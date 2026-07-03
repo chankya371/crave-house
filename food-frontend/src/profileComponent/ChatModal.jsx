@@ -81,17 +81,13 @@ const fileInputRef = useRef(null);
   }, [chatId]);
 
   // Receive Live Messages
-  useEffect(() => {
+useEffect(() => {
   const handleReceive = (data) => {
+    // Sirf current chat ke messages lo
+    if (data.chatId !== chatId) return;
+
     setMessages((prev) => {
-      const exists = prev.find(
-        (msg) =>
-          msg.id === data.id ||
-          (msg.time === data.time &&
-            msg.sender === data.sender &&
-            msg.text === data.text &&
-            msg.attachment === data.attachment)
-      );
+      const exists = prev.some((msg) => msg.id === data.id);
 
       if (exists) return prev;
 
@@ -104,7 +100,7 @@ const fileInputRef = useRef(null);
   return () => {
     socket.off("receive_message", handleReceive);
   };
-}, []);
+}, [chatId]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({

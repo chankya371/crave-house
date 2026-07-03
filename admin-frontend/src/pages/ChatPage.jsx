@@ -25,25 +25,32 @@ function ChatPage() {
   }, []);
 
   // Load customer chats
-  const loadChats = async () => {
-    try {
-      const token = localStorage.getItem("token");
+  // Load customer chats
+const loadChats = async () => {
+  try {
+    const token = localStorage.getItem("token");
 
-      const res = await API.get("/chat/admin", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+    const res = await API.get("/chat/admin", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-      setChats(
-        res.data.filter(
-          (chat) => chat.customer && chat.customer.role === "user"
-        )
-      );
-    } catch (err) {
-      console.log(err);
-    }
-  };
+    console.log(res.data); // check duplicates
+
+    const uniqueChats = [
+      ...new Map(
+        res.data
+          .filter(chat => chat.customer && chat.customer.role === "user")
+          .map(chat => [chat.customer._id, chat])
+      ).values(),
+    ];
+
+    setChats(uniqueChats);
+  } catch (err) {
+    console.log(err);
+  }
+};
 
   // Open customer chat
   const openChat = async (chat) => {
@@ -267,7 +274,7 @@ function ChatPage() {
                               loading="lazy"
                               onClick={() =>
                                 setPreviewImage(
-                                  `http://localhost:5000/uploads/chat/${msg.attachment}`
+                                  `http://localhost:5000/uploads/chat/${msg.attachment}`,
                                 )
                               }
                             />
@@ -327,13 +334,16 @@ function ChatPage() {
             )}
 
             {previewImage && (
-              <div className="image-preview-modal" onClick={() => setPreviewImage(null)}>
+              <div
+                className="image-preview-modal"
+                onClick={() => setPreviewImage(null)}
+              >
                 <span className="close-preview">✕</span>
                 <img
                   className="preview-full-image"
                   src={previewImage}
                   alt="Preview"
-                  onClick={(e)=>e.stopPropagation()}
+                  onClick={(e) => e.stopPropagation()}
                 />
               </div>
             )}
@@ -355,37 +365,37 @@ function ChatPage() {
 
               {/* Camera Button */}
               {/* Camera Button */}
-<button
-  type="button"
-  className="image-btn"
-  onClick={() => fileInputRef.current.click()}
-  disabled={!selectedChat}
->
-  <FcAddImage size={28} />
-</button>
+              <button
+                type="button"
+                className="image-btn"
+                onClick={() => fileInputRef.current.click()}
+                disabled={!selectedChat}
+              >
+                <FcAddImage size={28} />
+              </button>
 
-{/* Message Input */}
-<input
-  type="text"
-  placeholder="Type message..."
-  value={message}
-  onChange={(e) => setMessage(e.target.value)}
-  onKeyDown={(e) => {
-    if (e.key === "Enter") {
-      sendMessage();
-    }
-  }}
-/>
+              {/* Message Input */}
+              <input
+                type="text"
+                placeholder="Type message..."
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    sendMessage();
+                  }
+                }}
+              />
 
-{/* Send Button */}
-<button
-  type="button"
-  className="send-btn"
-  onClick={sendMessage}
-  disabled={!selectedChat}
->
-  <AiOutlineSend size={24} />
-</button>
+              {/* Send Button */}
+              <button
+                type="button"
+                className="send-btn"
+                onClick={sendMessage}
+                disabled={!selectedChat}
+              >
+                <AiOutlineSend size={24} />
+              </button>
             </div>
           </>
         )}
