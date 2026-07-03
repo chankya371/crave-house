@@ -4,14 +4,24 @@ import socket from "../socket/socket";
 import API from "../api/api";
 import "./../styles/profileComponentCSs/ChatModal.css";
 
-function ChatModal({ onClose }) {
-  const [message, setMessage] = useState("");
-  const [chatId, setChatId] = useState(null);
-  const [messages, setMessages] = useState([]);
+import { FcAddImage } from "react-icons/fc";
+import { AiOutlineSend } from "react-icons/ai";
 
-  const bottomRef = useRef(null);
+function ChatModal() {
+ const [message, setMessage] = useState("");
+const [chatId, setChatId] = useState(null);
+const [messages, setMessages] = useState([]);
 
-  // Create or Get Chat
+const [image, setImage] = useState(null);
+const [preview, setPreview] = useState("");
+
+// NEW
+const [selectedImage, setSelectedImage] = useState("");
+
+const bottomRef = useRef(null);
+const fileInputRef = useRef(null);
+
+  // Create Chat
   useEffect(() => {
     const createChat = async () => {
       try {
@@ -30,8 +40,6 @@ function ChatModal({ onClose }) {
         setChatId(res.data._id);
 
         socket.emit("join_chat", res.data._id);
-
-        console.log("✅ Joined Chat:", res.data._id);
       } catch (err) {
         console.error(err);
       }
@@ -40,7 +48,7 @@ function ChatModal({ onClose }) {
     createChat();
   }, []);
 
-  // Load Previous Messages
+  // Load Messages
   useEffect(() => {
     if (!chatId) return;
 
@@ -48,23 +56,22 @@ function ChatModal({ onClose }) {
       try {
         const token = localStorage.getItem("token");
 
-        const res = await API.get(
-          `/chat/${chatId}/messages`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+        const res = await API.get(`/chat/${chatId}/messages`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setMessages(
+          res.data.map((msg) => ({
+            id: msg._id,
+            sender: msg.senderType,
+            text: msg.message,
+            attachment: msg.attachment,
+            messageType: msg.messageType,
+            time: msg.createdAt,
+          }))
         );
-
-        const formatted = res.data.map((msg) => ({
-          id: msg._id,
-          sender: msg.senderType,
-          text: msg.message,
-          time: msg.createdAt,
-        }));
-
-        setMessages(formatted);
       } catch (err) {
         console.error(err);
       }
@@ -75,126 +82,311 @@ function ChatModal({ onClose }) {
 
   // Receive Live Messages
   useEffect(() => {
-    socket.on("receive_message", (data) => {
-      setMessages((prev) => [...prev, data]);
+  const handleReceive = (data) => {
+    setMessages((prev) => {
+      const exists = prev.find(
+        (msg) =>
+          msg.id === data.id ||
+          (msg.time === data.time &&
+            msg.sender === data.sender &&
+            msg.text === data.text &&
+            msg.attachment === data.attachment)
+      );
+
+      if (exists) return prev;
+
+      return [...prev, data];
     });
+  };
 
-    return () => {
-      socket.off("receive_message");
-    };
-  }, []);
+  socket.on("receive_message", handleReceive);
 
-  // Auto Scroll
+  return () => {
+    socket.off("receive_message", handleReceive);
+  };
+}, []);
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({
       behavior: "smooth",
     });
   }, [messages]);
 
-  // Send Message
-  const sendMessage = () => {
-    if (!chatId) return;
-    if (!message.trim()) return;
+  const formatDivider = (date) => {
+    const d = new Date(date);
 
-    const token = localStorage.getItem("token");
+    const today = new Date();
 
-    if (!token) return;
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
 
-    const user = jwtDecode(token);
+    if (d.toDateString() === today.toDateString()) return "Today";
 
-    const data = {
-      chatId,
-      sender: "customer",
-      senderId: user.id,
-      text: message,
-    };
+    if (d.toDateString() === yesterday.toDateString())
+      return "Yesterday";
 
-    socket.emit("send_message", data);
-
-    setMessage("");
+    return d.toLocaleDateString("en-IN", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
   };
 
-  return (
-    <div className="chat-overlay">
-      <div className="chat-modal">
+  // Send Message
+const sendMessage = async () => {
+  if (!chatId) return;
 
-        {/* Header */}
-        <div className="chat-header">
-          <div>
-            <h3>💬 Crave House Support</h3>
-            <span>🟢 Online</span>
-          </div>
+  const token = localStorage.getItem("token");
+  if (!token) return;
 
-          <button onClick={onClose}>✕</button>
-        </div>
+  const user = jwtDecode(token);
 
-        {/* Messages */}
-        <div className="chat-body">
+  let attachment = "";
+  let messageType = "text";
 
-          {messages.length === 0 && (
-            <div className="admin-message">
-              <p>👋 Hello! How can we help you today?</p>
-            </div>
-          )}
+  if (image) {
+    try {
+      const formData = new FormData();
+      formData.append("image", image);
 
-          {messages.map((msg) => (
-            <div
-              key={msg.id}
-              className={
-                msg.sender === "customer"
-                  ? "customer-message"
-                  : "admin-message"
-              }
-            >
-              <p>{msg.text}</p>
+      const res = await API.post("/chat/upload", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
-              {msg.time && (
-                <span className="msg-time">
-                  {new Date(msg.time).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </span>
-              )}
-            </div>
-          ))}
+      attachment = res.data.attachment;
+      messageType = "image";
+    } catch (err) {
+      console.error(err);
+      return;
+    }
+  }
 
-          <div ref={bottomRef}></div>
+  if (!message.trim() && !attachment) return;
 
-        </div>
+  socket.emit("send_message", {
+    chatId,
+    sender: "customer",
+    senderId: user.id,
+    text: message.trim(),
+    attachment,
+    messageType,
+  });
 
-        {/* Footer */}
-        <div className="chat-footer">
+  // DO NOT ADD MESSAGE HERE
+  // Socket receive_message will update UI
 
-          <input
-            type="text"
-            placeholder={
-              chatId
-                ? "Type your message..."
-                : "Connecting..."
-            }
-            value={message}
-            disabled={!chatId}
-            onChange={(e) => setMessage(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                sendMessage();
-              }
-            }}
-          />
+  setMessage("");
+  setImage(null);
 
-          <button
-            onClick={sendMessage}
-            disabled={!chatId}
-          >
-            ➤
-          </button>
+  if (preview) {
+    URL.revokeObjectURL(preview);
+  }
 
-        </div>
+  setPreview("");
 
+  if (fileInputRef.current) {
+    fileInputRef.current.value = "";
+  }
+};
+
+
+return (
+  <div className="chat-modal">
+    {/* Header */}
+    <div className="chat-header">
+      <div>
+        <h3>💬 Crave House Support</h3>
+        <span>🟢 Online</span>
       </div>
     </div>
-  );
+
+    {/* Chat Body */}
+    <div className="chat-body">
+      {messages.length === 0 && (
+        <div className="admin-message">
+          <p>👋 Hello! How can we help you today?</p>
+        </div>
+      )}
+
+      {messages.map((msg, index) => {
+        const showDivider =
+          index === 0 ||
+          new Date(messages[index - 1].time).toDateString() !==
+            new Date(msg.time).toDateString();
+
+        return (
+          <div key={msg.id}>
+            {showDivider && (
+              <div className="chat-divider">
+                <span>{formatDivider(msg.time)}</span>
+              </div>
+            )}
+
+            <div
+              className={`message-row ${
+                msg.sender === "customer"
+                  ? "customer"
+                  : "admin"
+              }`}
+            >
+              <div
+                className={
+                  msg.sender === "customer"
+                    ? "customer-message"
+                    : "admin-message"
+                }
+              >
+                {/* Image */}
+               {msg.attachment && (
+  <img
+    src={`http://localhost:5000/uploads/chat/${msg.attachment}`}
+    alt="chat"
+    className="chat-image"
+    onClick={() =>
+      setSelectedImage(
+        `http://localhost:5000/uploads/chat/${msg.attachment}`
+      )
+    }
+    style={{ cursor: "pointer" }}
+  />
+)}
+
+{msg.text && <p>{msg.text}</p>}
+
+<span className="msg-time">
+  {new Date(msg.time).toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  })}
+</span>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+
+      <div ref={bottomRef}></div>
+    </div>
+
+    {/* Selected Image Preview */}
+   {preview && (
+  <div className="selected-image-preview">
+    <img
+      src={preview}
+      alt="Preview"
+      className="preview-image"
+    />
+
+    <button
+  type="button"
+  className="remove-image"
+  onClick={() => {
+  if (preview) {
+    URL.revokeObjectURL(preview);
+  }
+
+  setPreview("");
+  setImage(null);
+
+  if (fileInputRef.current) {
+    fileInputRef.current.value = "";
+  }
+}}
+>
+  ✕
+</button>
+  </div>
+)}
+
+{/* NEW - Full Screen Image Viewer (AFTER CLICKING CHAT IMAGE) */}
+{selectedImage && (
+  <div
+    className="image-viewer"
+    onClick={() => setSelectedImage("")}
+  >
+    <span
+      className="close-viewer"
+      onClick={() => setSelectedImage("")}
+    >
+      ✕
+    </span>
+
+    <img
+      src={selectedImage}
+      alt="Full Preview"
+      className="viewer-image"
+      onClick={(e) => e.stopPropagation()}
+    />
+  </div>
+)}
+
+    {/* Footer */}
+    <div className="chat-footer">
+      {/* Hidden File Input */}
+      <input
+  type="file"
+  accept="image/*"
+  ref={fileInputRef}
+  style={{ display: "none" }}
+  onChange={(e) => {
+  const file = e.target.files?.[0];
+
+  if (!file) return;
+
+  if (preview) {
+    URL.revokeObjectURL(preview);
+  }
+
+  setImage(file);
+
+  const imageUrl = URL.createObjectURL(file);
+
+  setPreview(imageUrl);
+}}
+/>
+
+     {/* Camera Button */}
+<button
+  type="button"
+  className="image-btn"
+  onClick={() => fileInputRef.current?.click()}
+>
+  <FcAddImage size={26} />
+</button>
+
+{/* Text Input */}
+<input
+  type="text"
+  placeholder={
+    chatId
+      ? "Type your message..."
+      : "Connecting..."
+  }
+  value={message}
+  disabled={!chatId}
+  onChange={(e) => setMessage(e.target.value)}
+  onKeyDown={(e) => {
+    if (e.key === "Enter") {
+      sendMessage();
+    }
+  }}
+/>
+
+{/* Send Button */}
+<button
+  type="button"
+  className="send-btn"
+  onClick={sendMessage}
+  disabled={!chatId}
+>
+  <AiOutlineSend size={22} />
+</button>
+    </div>
+  </div>
+);
 }
 
 export default ChatModal;

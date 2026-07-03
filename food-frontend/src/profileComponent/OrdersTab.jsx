@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import API from "../api/api";
 import "../styles/profileComponentCSs/ordersTab.css";
-
-function OrdersTab() {
+// import { useNavigate } from "react-router-dom";
+// import HelpCenter from "../pages/HelpCenter";
+function OrdersTab({ setActiveTab }) {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  // const navigate = useNavigate();
 
   useEffect(() => {
     fetchOrders();
@@ -86,18 +88,14 @@ function OrdersTab() {
 
           <div className="order-buttons">
             {isTrackable(order.status) && (
-              <button className="track-btn">
-                TRACK ORDER
-              </button>
+              <button className="track-btn">TRACK ORDER</button>
             )}
 
             {isDelivered(order.status) && (
-              <button className="reorder-btn">
-                REORDER
-              </button>
+              <button className="reorder-btn">REORDER</button>
             )}
 
-            <button className="help-btn">
+            <button className="help-btn" onClick={() => setActiveTab("help")}>
               HELP
             </button>
           </div>

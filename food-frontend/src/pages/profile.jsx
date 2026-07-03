@@ -19,7 +19,7 @@ import Favourites from "../profileComponent/Favourites";
 import AddressTab from "../profileComponent/AddressTab";
 import SettingsTab from "../profileComponent/SettingsTab";
 import HelpCenter from "../profileComponent/HelpCenter";
-import ChatModal from "../profileComponent/ChatModal";
+
 
 function Profile() {
   const navigate = useNavigate();
@@ -34,7 +34,6 @@ function Profile() {
 
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("orders");
-  const [showChat, setShowChat] = useState(false);
 
   const fetchProfile = useCallback(async () => {
     try {
@@ -153,6 +152,8 @@ function Profile() {
             <span>Help</span>
           </div>
 
+          
+
           <div
             className="sidebar-item logout"
             onClick={logout}
@@ -164,26 +165,19 @@ function Profile() {
 
         {/* RIGHT CONTENT */}
         <div className="profile-content">
-          {activeTab === "orders" && <OrdersTab />}
-
+{activeTab === "orders" && (
+  <OrdersTab setActiveTab={setActiveTab} />
+)}
           {activeTab === "favourites" && <Favourites />}
 
           {activeTab === "address" && <AddressTab />}
 
           {activeTab === "settings" && <SettingsTab />}
 
-         {activeTab === "help" && (
- <HelpCenter
-  onOpenChat={() => setShowChat(true)}
-/>
-)}
+        {activeTab === "help" && <HelpCenter />}
         </div>
 
-        {showChat && (
-  <ChatModal
-    onClose={() => setShowChat(false)}
-  />
-)}
+        
       </div>
     </div>
     

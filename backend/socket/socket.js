@@ -23,63 +23,74 @@ export const initSocket = (socketIo) => {
 
     // Send Message
     socket.on("send_message", async (data) => {
-      try {
-        const {
-          chatId,
-          senderId,
-          sender,
-          text,
-        } = data;
+  try {
+    const {
+      chatId,
+      senderId,
+      sender,
+      text,
+      attachment = "",
+      messageType = "text",
+    } = data;
 
-        // Save message
-        const newMessage = await Message.create({
-          chat: chatId,
-          sender: senderId,
-          senderType: sender,
-          message: text,
-        });
-
-        // Get current chat
-        const chat = await Chat.findById(chatId);
-
-        if (!chat) return;
-
-        // Customer message
-        if (sender === "customer") {
-          chat.lastMessage = text;
-          chat.lastMessageTime = new Date();
-          chat.unreadCount += 1;
-        }
-
-        // Admin message
-        if (sender === "admin") {
-          chat.lastMessage = text;
-          chat.lastMessageTime = new Date();
-          chat.unreadCount = 0;
-
-          if (!chat.admin) {
-            chat.admin = senderId;
-          }
-        }
-
-        await chat.save();
-
-        // Send realtime message
-        io.to(chatId).emit("receive_message", {
-          id: newMessage._id,
-          chatId,
-          sender,
-          senderId,
-          text: newMessage.message,
-          time: newMessage.createdAt,
-        });
-
-        console.log("📨 Message Saved:", newMessage._id);
-
-      } catch (err) {
-        console.error("❌ Socket Error:", err);
-      }
+    const newMessage = await Message.create({
+      chat: chatId,
+      sender: senderId,
+      senderType: sender,
+      message: text || "",
+      attachment,
+      messageType,
     });
+
+    const chat = await Chat.findById(chatId);
+
+    if (!chat) return;
+
+    // Last message preview
+    let lastMsg = text;
+
+    if (messageType === "image") {
+      lastMsg = text ? "📷 " + text : "📷 Image";
+    }
+
+    if (messageType === "file") {
+      lastMsg = "📎 File";
+    }
+
+    chat.lastMessage = lastMsg;
+    chat.lastMessageTime = new Date();
+
+    if (sender === "customer") {
+      chat.unreadCount += 1;
+    } else {
+      chat.unreadCount = 0;
+
+      if (!chat.admin) {
+        chat.admin = senderId;
+      }
+    }
+
+    await chat.save();
+
+   const payload = {
+    id: newMessage._id,
+    chatId,
+    sender,
+    senderId,
+    text: newMessage.message,
+    attachment: newMessage.attachment,
+    messageType: newMessage.messageType,
+    time: newMessage.createdAt,
+};
+
+io.to(chatId).emit("receive_message", payload);
+
+    console.log("📨 Message Saved:", newMessage._id);
+
+  } catch (err) {
+    console.error("❌ Socket Error:", err);
+  }
+});
 
     socket.on("disconnect", () => {
       console.log("❌ User Disconnected:", socket.id);

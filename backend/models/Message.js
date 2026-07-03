@@ -23,7 +23,7 @@ const messageSchema = new mongoose.Schema(
 
     message: {
       type: String,
-      required: true,
+      default: "",
       trim: true,
     },
 
@@ -52,5 +52,11 @@ const messageSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+messageSchema.pre("validate", function () {
+  if (!this.message && !this.attachment) {
+    throw new Error("Message or attachment is required");
+  }
+});
 
 export default mongoose.model("Message", messageSchema);
